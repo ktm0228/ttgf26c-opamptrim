@@ -19,7 +19,8 @@ A two-stage Miller-compensated op-amp (NMOS input pair) with digital trims, all 
 
 The reference comes from an on-chip constant-gm bias (BIAS_SEL = 1) or from an external 5 µA sink
 on IREF (BIAS_SEL = 0). UNITY_EN closes the op-amp as a unity-gain buffer on chip, so it can be
-characterized with four analog pins. VINP, VINN and IREF have CDM protection.
+characterized with four analog pins; it also cuts VINN off from the inverting input. VINP, VINN and
+IREF have CDM protection.
 
 | Bits | Field | Reset |
 |---|---|---|
@@ -45,7 +46,8 @@ ui_in[1] SCLK, ui_in[2] LATCH, ui_in[3] AMP_EN, ui_in[4] BIAS_SEL, ui_in[5] UNIT
    rising SCLK edges (bit 39 first), then pulse LATCH. DOUT is the last stage of the chain, so
    shifting reads the word back. Wait at least 1 µs after LATCH before measuring, and stop SCLK
    while measuring.
-3. **Buffer.** Set UNITY_EN = 1. Leave VINN open on a short trace, put 15 pF on VOUT and drive VINP
+3. **Buffer.** Set UNITY_EN = 1: VOUT drives the inverting input on chip and VINN is cut off from it,
+   so VINN can stay open. Put 15 pF on VOUT and drive VINP
    at 1.65 V. Measure the offset (VOUT − VINP), a 20 mV step and a ±0.3 V step at VOUT, then repeat
    across trim codes. TT's analog switch and routing sit between the op-amp and the pins, so
    compare against a simulation that includes them.
